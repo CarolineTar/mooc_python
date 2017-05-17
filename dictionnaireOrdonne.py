@@ -1,8 +1,9 @@
+### Classe de dictionaires ordonés ###
 class OrderedDictionnary:
     def __init__(self, *entry):
         self.keys=list()
         self.values=list()
-        
+        # un dictionaire a été entré
         if len(entry)==1  and type(entry[0]) == dict:
             dico = entry[0]
             for key, value in dico.items():
@@ -14,7 +15,8 @@ class OrderedDictionnary:
                 new_key = new_key.strip()
                 self.keys.append(new_key)
                 self.values.append(new_value)
-        elif len(entry) >1:
+        #plusieurs arguments ont été entrés
+        elif len(entry) >=1:
             for val in entry:
                 symb=str(val)
                 sep = symb.split("=")
@@ -29,8 +31,6 @@ class OrderedDictionnary:
                     self.values.append(new_value)
                 else:
                     raise Exception("les valeurs", entry,"ne sont pas au bon format2")
-        else:
-            raise Exception("les valeurs", entry,"ne sont pas au bon format3")
         if len(self.keys) != len(self.values):
             raise Exception("il y a un problème !!!")
 
@@ -43,13 +43,10 @@ class OrderedDictionnary:
 
 
     def __getitem__(self, item):
-        test = 0
         for ind, key in enumerate(self.keys):
             if item == key:
                 return(self.values[ind])
-                test = 1
-            if test == 0:
-                print("la clé", item, "n est pas dans", self)
+        print("la clé", item, "n est pas dans", self)
     
     def __delitem__(self, item):
         test = 0
@@ -155,5 +152,3 @@ class DicoIterator:
         self.position +=1
         return self.dico[(self.position-1)]
 
-
-test = OrderedDictionnary("pommes=3", "poires = 12")
