@@ -1,4 +1,4 @@
-### Classe de dictionaires ordonés ###
+### Classe de dictionaires ordonnés ###
 class OrderedDictionnary:
     def __init__(self, *entry):
         self.keys=list()
@@ -36,8 +36,9 @@ class OrderedDictionnary:
 
     def __repr__(self):
         output="{"
-        for i in range(len(self.keys)):
-            output +=  " " + self.keys[i] + ":" + str(self.values[i]) + " , "
+        output +=  self.keys[0] + ":" + str(self.values[0])
+        for i in range(1,len(self.keys)):
+            output +=  " ," + self.keys[i] + ":" + str(self.values[i])
         output +="}"
         return output
 
@@ -49,17 +50,16 @@ class OrderedDictionnary:
         print("la clé", item, "n est pas dans", self)
     
     def __delitem__(self, item):
-        test = 0
-        for ind, key in enumerate(self.keys):
-            if item == key:
-                del self.keys[ind]
-                del self.values[ind]
-                test = 1
-                print("nous avons supprimé lentrée", item)
-        if test == 0:
+        # je n'ai repris que celui là parce que la flemme, mais idéalement il faudrait tous les modifier
+        if item in self.keys:
+            ind = self.keys.index(item)
+            del self.keys[ind]
+            del self.values[ind]
+            print("nous avons supprimé lentrée", item)
+        else: 
             print("la clé", item, "n est pas dans", self)
 
-
+    
     def __setitem__(self, wanted_key, new_value):
         test = 0
         for ind, key in enumerate(self.keys):
@@ -90,8 +90,8 @@ class OrderedDictionnary:
     def __len__(self):
         return len(self.keys)
 
-    def sort(self):
-        sorted_keys = sorted(self.keys)
+    def sort(self, rev = False):
+        sorted_keys = sorted(self.keys, reverse = rev)
         sorted_values = list()
         for num1, new_key in enumerate(sorted_keys):
             for num2, old_key in enumerate(self.keys):
@@ -100,18 +100,13 @@ class OrderedDictionnary:
         self.keys = sorted_keys
         self.values = sorted_values
 
-    def reverse(self):
-        sorted_keys = sorted(self.keys, reverse = True)
-        sorted_values = list()
-        for num1, new_key in enumerate(sorted_keys):
-            for num2, old_key in enumerate(self.keys):
-               if new_key == old_key:
-                   sorted_values.append(self.values[num2])
-        self.keys = sorted_keys
-        self.values = sorted_values
+    def my_generator(self):
+            for key in self.keys:
+                yield key
 
     def __iter__(self):
-            return DicoIterator(self)
+        # méthode plus simple que la précédente
+        return iter(self.keys)
 
     def keys(self):
         return self.keys
@@ -120,10 +115,9 @@ class OrderedDictionnary:
         return self.values
     
     def items(self):
-        output = list()
         for ind, key in enumerate(self.keys):
             value = self.values[ind]
-            output.append((key, value))
+            yield (key, value)
         return output
     
     def __add__(self, new_dico):
@@ -140,15 +134,5 @@ class OrderedDictionnary:
         else:
             raise Exception(new_dico, "n'est pas un dictionnaire!")
         
-        
-class DicoIterator:
-    def __init__(self, objet):
-        self.dico=objet.keys
-        self.position = 0
-        
-    def __next__(self):
-        if self.position ==(len(self.dico)):
-            raise StopIteration
-        self.position +=1
-        return self.dico[(self.position-1)]
 
+test = OrderedDictionnary("pommes = 49", "poires = 45")
